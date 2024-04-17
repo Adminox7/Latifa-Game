@@ -235,4 +235,4 @@ game.scene.add('Entrer', Entrer);
 game.scene.add('loadingPage', LoadingPage);
 game.scene.add('Game', GameLogic);
 game.scene.add('gameOver', gameOver);
-game.scene.start('Game');
+game.scene.start('loadingPage');
