@@ -111,6 +111,7 @@ class GameLogic extends Phaser.Scene {
 
 
     this.matchtext = [this.questions[Math.floor(Math.random() * this.questions.length)]];
+    this.questions.splice(this.questions.indexOf(this.matchtext[0]), 1);
     // Taille maximale de la police pour la question
     const maxFontSize = 22;
     
@@ -153,8 +154,6 @@ class GameLogic extends Phaser.Scene {
 
     this.textR = textRArray.reverse();
     this.scoretext = this.add.text(650, 20, 'Score: ' + this.score, { fontSize: '22px', fill: '#0C0C0C' });
-
-    this.questions.splice(this.questions.indexOf(this.matchtext[0]), 1);
   }
   update() {
     if (this.text1.join('').length === this.matchtext[0][1].length) {
