@@ -1,4 +1,3 @@
-
 const config = {
   type: Phaser.AUTO,
   width: 800,
@@ -60,7 +59,9 @@ class Entrer extends Phaser.Scene {
 class GameLogic extends Phaser.Scene {
   constructor() {
     super({ key: 'Game' });
-    this.textArabe = ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي'];
+    this.textArabe = [
+  "ا", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "ه", "و", "ي"
+];;
     this.questions = [['من هو خاتم الأنبياء ؟', 'محمد'],
     ['من بنى الكعبة؟', 'ابراهيم'],
     ['أول نبي في الإسلام؟', 'ادم'],
@@ -70,20 +71,16 @@ class GameLogic extends Phaser.Scene {
     [ "من هو خالق الكون؟","الله"],
     [ "ما هو الدين الذي أنزله الله على نبيه محمد صلى الله عليه وسلم؟","الاسلام"],
     ["ما هو أول ركن من أركان الإسلام؟","التوحيد"],
-    [ "ما هو الفريضة التي تعتبر ركناً من أركان الإسلام؟","الصلاة"],
+    [ "ما هي الفريضة التي تعتبر ركناً من أركان الإسلام؟","الصلاة"],
     ["ما هي الزكاة؟","الصدقة"],
     ["ما هو العمل الذي يفرضه الله على المسلمين في شهر رمضان؟","الصيام"],
-    ["ما هو الفريضة التي تعتبر ركناً من أركان الإسلام ويؤديها المسلم مرة واحدة في العمر؟","الحج"],
-
-  
-  
+    ["ما هي الفريضة التي تعتبر ركناً من أركان الإسلام ويؤديها المسلم مرة واحدة في العمر؟","الحج"],
   ];
     this.text1 = [];
     this.isTextComplete = false;
+    this.falseLt= []
     this.score = 0;
     this.NbFalse = 0;
-
-    // Initialisation du texte affiché
   }
   preload() {
     this.load.image('bgGame', './assets/bgGame.jpg');
@@ -114,19 +111,25 @@ class GameLogic extends Phaser.Scene {
 
 
     this.matchtext = [this.questions[Math.floor(Math.random() * this.questions.length)]];
-    this.textQ = this.add.text(250, 40, this.matchtext[0][0], { fontSize: '22px', fill: '#0C0C0C' }).setOrigin(0.5);;
-    //  console.log(this.matchtext[0][1])
-    // Affichage du texte caché
+    // Taille maximale de la police pour la question
+    const maxFontSize = 22;
+    
+    // Vérifier la longueur de la question et ajuster la taille de la police si nécessaire
+    let questionFontSize = maxFontSize;
+    const maxQuestionWidth = 500; // Largeur maximale pour la question
+    const questionText = this.matchtext[0][0];
+    // Affichage de la question avec la taille de police ajustée
+    this.textQ = this.add.text(250, 40, questionText, { fontSize: questionFontSize + 'px', fill: '#0C0C0C', wordWrap: { width: maxQuestionWidth } }).setOrigin(0.5);
+
     let startX = 200;
     let textRArray = [];
     for (let indexP = 0; indexP < this.matchtext[0][1].length; indexP++) {
       let textR = this.add.text(startX, 120, '-', { fontSize: '32px', fill: '#0C0C0C' }).setOrigin(0.5);
-      startX += 40; // Augmenter la position horizontale pour chaque lettre
+      startX += 40;
       textRArray.push(textR);
     }
     this.joined = this.add.text(80, 105, '', { fontSize: '32px', fill: '#0C0C0C' });
 
-    // Affichage des lettres arabes
     for (let ind = 0; ind < this.textArabe.length; ind++) {
       let buttonX;
       let buttonY;
@@ -145,35 +148,26 @@ class GameLogic extends Phaser.Scene {
       this.ArabeText = this.add.text(buttonX, buttonY, lettre, this.scoreTextStyle);
       this.ArabeText.setInteractive({ useHandCursor: true });
 
-      // Ajout d'un événement pointerdown pour chaque lettre arabe
       this.ArabeText.on('pointerdown', () => this.clickButtonText(lettre, buttonX, buttonY));
     }
 
-    // this.sound.play('Mp3', { loop: true });
     this.textR = textRArray.reverse();
-    this.scoretext = this.add.text(650, 20, 'Score: ' + this.score, { fontSize: '22px', fill: '#0C0C0C' })
-    console.log(this.matchtext[0][0])
-
+    this.scoretext = this.add.text(650, 20, 'Score: ' + this.score, { fontSize: '22px', fill: '#0C0C0C' });
   }
-
   update() {
-    if (this.text1.join('') === this.matchtext[0][1]) {
+    if (this.text1.join('').length === this.matchtext[0][1].length) {
       const joinedText = this.text1.join('');
       this.joined.setText(joinedText);
       this.score += 10;
-      game.scene.start('Game')
-      
-      console.log(this.text1.join(''))
-      // Mettre à jour le texte complet
-      // console.log(this.matchtext[0][1])
-      // console.log(this.text1)
+      this.text1 = [];
+      this.scoretext.setText('Score: ' + this.score);
+      this.create();
     }
   }
 
   clickButtonText(lettre, x, y) {
     if (this.matchtext[0][1].includes(lettre)) {
       if (!this.text1.includes(lettre)) {
-
         this.scoretext.setText('Score: ' + this.score);
       }
       this.trueIM = this.add.image(x + 14, y + 20, 'true').setScale(0.07)
@@ -183,33 +177,29 @@ class GameLogic extends Phaser.Scene {
       }
       indexes.forEach(index => {
         this.text1[index] = lettre;
-        this.textR[index].setText(lettre); // Mettre à jour la lettre correspondante dans le texte caché
+        this.textR[index].setText(lettre);
       });
 
     } else {
-
-
-      this.NbFalse++
-
-      if (this.NbFalse <= 3) {
-        this.falseIM = this.add.image(x + 14, y + 20, 'false').setScale(0.07)
-      }
-
-      if (this.NbFalse == 3) {
       
+      if (!this.falseLt.includes(lettre)) {
+        this.falseLt.push(lettre);
+        console.log(this.falseLt);
+        // Affichez l'image de la lettre fausse seulement si NbFalse est inférieur ou égal à 3
+        if (this.NbFalse <= 3) {
+          this.NbFalse++;
+          this.falseIM = this.add.image(x + 14, y + 20, 'false').setScale(0.07);
+        }
+        if (this.NbFalse === 3) {
           this.scene.start('gameOver');
-          this.NbFalse=0;
-        
+          this.NbFalse = 0;
+          this.score = 0;
+          this.falseLt = [];
+        }
       }
-
-
-
+      
     }
-
-    
   }
-
-
 }
 
 class gameOver extends Phaser.Scene {
@@ -225,15 +215,18 @@ class gameOver extends Phaser.Scene {
     this.bg.x = 800 / 2;
     this.bg.y = 500 / 2;
 
-    this.Entrerbtn = this.add.sprite(800 / 2, (700 / 2) + 100, 'playagain').setScale(0.5);
+    this.Entrerbtn = this.add.sprite(400 , 450, 'playagain').setScale(0.5);
     this.Entrerbtn.setInteractive({ useHandCursor: true });
     this.Entrerbtn.on('pointerdown', () => this.clickButton());
   }
   update() { }
 
   clickButton() {
-    this.scene.start('Game');
+    this.restartGame();
     this.Entrerbtn.destroy();
+  }
+  restartGame() {
+    this.scene.start('Game');
   }
 }
 
@@ -241,4 +234,4 @@ game.scene.add('Entrer', Entrer);
 game.scene.add('loadingPage', LoadingPage);
 game.scene.add('Game', GameLogic);
 game.scene.add('gameOver', gameOver);
-game.scene.start('Game'); // Démarre la scène Game directement
+game.scene.start('Game');
