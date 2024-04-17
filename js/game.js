@@ -153,6 +153,8 @@ class GameLogic extends Phaser.Scene {
 
     this.textR = textRArray.reverse();
     this.scoretext = this.add.text(650, 20, 'Score: ' + this.score, { fontSize: '22px', fill: '#0C0C0C' });
+
+    this.questions.splice(this.questions.indexOf(this.matchtext[0]), 1);
   }
   update() {
     if (this.text1.join('').length === this.matchtext[0][1].length) {
