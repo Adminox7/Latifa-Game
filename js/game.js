@@ -185,7 +185,6 @@ class GameLogic extends Phaser.Scene {
       
       if (!this.falseLt.includes(lettre)) {
         this.falseLt.push(lettre);
-        console.log(this.falseLt);
         // Affichez l'image de la lettre fausse seulement si NbFalse est inférieur ou égal à 3
         if (this.NbFalse <= 3) {
           this.NbFalse++;
