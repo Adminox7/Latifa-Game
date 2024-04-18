@@ -85,10 +85,9 @@ class GameLogic extends Phaser.Scene {
   preload() {
     this.load.image('bgGame', './assets/bgGame.jpg');
     this.load.image('GirlIslamik', './assets/GirlIslamik.png');
-    this.load.image('button', './assets/button.png');
     this.load.image('true', './assets/true.png');
     this.load.image('false', './assets/false.png');
-    this.load.image('nextLevel', './assets/nextLevel.jpeg');
+    // this.load.image('nextLevel', './assets/nextLevel.jpeg');
   }
 
   create() {
