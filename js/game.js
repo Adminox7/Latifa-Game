@@ -60,7 +60,7 @@ class GameLogic extends Phaser.Scene {
   constructor() {
     super({ key: 'Game' });
     this.textArabe = [
-  "ا", "ب","ة","ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "ه", "و", "ي"
+  "ا", "ب","ة", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "ه", "و", "ي"
 ];;
     this.questions = [['من هو خاتم الأنبياء ؟', 'محمد'],
     ['من بنى الكعبة؟', 'ابراهيم'],
@@ -81,6 +81,8 @@ class GameLogic extends Phaser.Scene {
     this.falseLt= []
     this.score = 0;
     this.NbFalse = 0;
+   
+
   }
   preload() {
     this.load.image('bgGame', './assets/bgGame.jpg');
@@ -88,6 +90,7 @@ class GameLogic extends Phaser.Scene {
     this.load.image('true', './assets/true.png');
     this.load.image('false', './assets/false.png');
     // this.load.image('nextLevel', './assets/nextLevel.jpeg');
+    this.load.audio("mp3game",'./assets/mp3game.wav');
   }
 
   create() {
@@ -110,7 +113,7 @@ class GameLogic extends Phaser.Scene {
 
 
     this.matchtext = [this.questions[Math.floor(Math.random() * this.questions.length)]];
-    this.questions.splice(this.questions.indexOf(this.matchtext[0]), 1);
+    
     // Taille maximale de la police pour la question
     const maxFontSize = 22;
     
@@ -153,6 +156,9 @@ class GameLogic extends Phaser.Scene {
 
     this.textR = textRArray.reverse();
     this.scoretext = this.add.text(650, 20, 'Score: ' + this.score, { fontSize: '22px', fill: '#0C0C0C' });
+
+   
+    this.questions.splice(this.questions.indexOf(this.matchtext[0]), 1);
   }
   update() {
     if (this.text1.join('').length === this.matchtext[0][1].length) {
@@ -161,6 +167,7 @@ class GameLogic extends Phaser.Scene {
       this.score += 10;
       this.text1 = [];
       this.scoretext.setText('Score: ' + this.score);
+      this.trueIM.destroy();
       this.create();
     }
   }
@@ -194,6 +201,7 @@ class GameLogic extends Phaser.Scene {
           this.NbFalse = 0;
           this.score = 0;
           this.falseLt = [];
+          this.falseIM.destroy();
         }
       }
       
