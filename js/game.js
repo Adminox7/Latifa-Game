@@ -12,25 +12,6 @@ const config = {
 };
 const game = new Phaser.Game(config);
 
-// class LoadingPage extends Phaser.Scene {
-//   constructor() {
-//     super({ key: 'loadingPage' });
-//   }
-//   preload() {
-//     this.load.image('loading', './assets/loading.jpg');
-//   }
-//   create() {
-//     this.loading = this.add.sprite(0, 0, 'loading').setScale(0.17);
-//     this.loading.x = 800 / 2;
-//     this.loading.y = 500 / 2;
-//   }
-//   update(time) {
-//     if (time > 3000) {
-//       this.scene.start('Entrer');
-//     }
-//   }
-// }
-
 class Entrer extends Phaser.Scene {
   constructor() {
     super({ key: 'Entrer' });
@@ -79,6 +60,7 @@ class GameLogic extends Phaser.Scene {
     this.falseLt= []
     this.score = 0;
     this.NbFalse = 0;
+    // this.timer = null;
    
 
   }
@@ -91,6 +73,8 @@ class GameLogic extends Phaser.Scene {
     this.load.image('Score', './assets/score.png');
     // this.load.image('nextLevel', './assets/nextLevel.jpeg');
     this.load.audio("mp3game",'./assets/mp3game.wav');
+    this.load.audio("treuSound",'./assets/treuSound.mp3');
+    this.load.audio("falseSound",'./assets/falseSound.mp3');
   }
 
   create() {
@@ -159,22 +143,35 @@ class GameLogic extends Phaser.Scene {
     let startX = 170;
     let textRArray = [];
     for (let indexP = 0; indexP < this.matchtext[0][1].length; indexP++) {
-      let textR = this.add.text(startX, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5);
       startX += 25;
+      if (this.matchtext[0][1].length == 3) {
+        var textR = this.add.text(startX+55, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5);
+      }if (this.matchtext[0][1].length == 4) {
+        var textR = this.add.text(startX+40, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5);
+      }if (this.matchtext[0][1].length == 5) {
+        var textR = this.add.text(startX+30, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5);
+      }if (this.matchtext[0][1].length == 6) {
+        var textR = this.add.text(startX+20, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5);
+      }if (this.matchtext[0][1].length == 7) {
+        var textR = this.add.text(startX+5, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5); 
+      }if (this.matchtext[0][1].length == 8) {
+        var textR = this.add.text(startX, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5);
+      }
+      if (this.matchtext[0][1].length == 9) {
+        var textR = this.add.text(startX-5, 270, '-', { fontSize: 15 + 'px', fill: '#4d2412', wordWrap: { width: maxtitreWidth } }).setOrigin(0.5);
+      }
       textRArray.push(textR);
     }
     this.joined = this.add.text(80, 105, '', { fontSize: '32px', fill: '#0C0C0C' });
     
-
-   
-
     this.textR = textRArray.reverse();
     this.add.image(435,70,'Score').setScale(0.45);
     this.scoretext = this.add.text(392, 59, this.score+':النقاط', { fontSize: '18px', fill: 'white' });
    
     this.questions.splice(this.questions.indexOf(this.matchtext[0]), 1);
-    // this.timerText = this.add.text(700, 20, 'Time: 60', { fontFamily: 'Arial', fontSize: 24, color: '#ffffff' });
-    // this.timerEvent = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, loop: true });
+    this.timerText = this.add.text(700, 20, 'Time: 60', { fontFamily: 'Arial', fontSize: 24, color: '#ffffff' });
+    this.timerEvent = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, loop: true });
+    this.sound.add('mp3game').play({loop:true});
 
   }
 
@@ -204,8 +201,9 @@ class GameLogic extends Phaser.Scene {
       indexes.forEach(index => {
         this.text1[index] = lettre;
         this.textR[index].setText(lettre);
+        // this.sound.add('treuSound').play();
       });
-
+      
     } else {
       
       if (!this.falseLt.includes(lettre)) {
@@ -214,6 +212,7 @@ class GameLogic extends Phaser.Scene {
         if (this.NbFalse <= 3) {
           this.NbFalse++;
           this.falseIM = this.add.image(x + 21, y + 18, 'false').setScale(0.05);
+          // this.sound.add('falseSound').play();
         }
         if (this.NbFalse === 3) {
           this.scene.start('gameOver');
